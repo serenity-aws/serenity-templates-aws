@@ -1,3 +1,3 @@
-# serenity-resource-aws-template
+# serenity-templates-aws
 
-## Generic OpenTofu/Terraform module template for AWS resources
+## Template files used in Serenity AWS blueprints
