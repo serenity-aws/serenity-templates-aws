@@ -1,0 +1,104 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:${aws.partition}:iam::${aws.account_id}:root"
+      },
+      "Action": "kms:*",
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:${aws.partition}:iam::${aws.account_id}:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS"
+      },
+      "Action": [
+        "kms:CancelKeyDeletion",
+        "kms:Create*",
+        "kms:Decrypt",
+        "kms:Delete*",
+        "kms:Describe*",
+        "kms:Disable*",
+        "kms:Enable*",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:Get*",
+        "kms:List*",
+        "kms:Put*",
+        "kms:ReEncrypt*",
+        "kms:Revoke*",
+        "kms:RotateKeyOnDemand",
+        "kms:ScheduleKeyDeletion",
+        "kms:TagResource",
+        "kms:UntagResource",
+        "kms:Update*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": [
+          "ecs-tasks.amazonaws.com",
+          "ecs.amazonaws.com",
+          "ec2.amazonaws.com",
+          "logs.${aws.region}.amazonaws.com"
+        ]
+      },
+      "Action": [
+        "kms:CancelKeyDeletion",
+        "kms:Create*",
+        "kms:Decrypt",
+        "kms:Delete*",
+        "kms:Describe*",
+        "kms:Disable*",
+        "kms:Enable*",
+        "kms:Encrypt",
+        "kms:GenerateDataKey*",
+        "kms:Get*",
+        "kms:List*",
+        "kms:Put*",
+        "kms:ReEncrypt*",
+        "kms:Revoke*",
+        "kms:RotateKeyOnDemand",
+        "kms:ScheduleKeyDeletion",
+        "kms:TagResource",
+        "kms:UntagResource",
+        "kms:Update*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "Allow generate data key access for Fargate tasks.",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "fargate.amazonaws.com"
+      },
+      "Action": "kms:GenerateDataKeyWithoutPlaintext",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "kms:EncryptionContext:aws:ecs:clusterName": "${cluster_name}",
+          "kms:EncryptionContext:aws:ecs:clusterAccount": "${aws.account_id}"
+        }
+      }
+    },
+    {
+      "Sid": "Allow grant creation permission for Fargate tasks.",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "fargate.amazonaws.com"
+      },
+      "Action": "kms:CreateGrant",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "kms:EncryptionContext:aws:ecs:clusterName": "${cluster_name}",
+          "kms:EncryptionContext:aws:ecs:clusterAccount": "${aws.account_id}"
+        }
+      }
+    }
+  ]
+}
